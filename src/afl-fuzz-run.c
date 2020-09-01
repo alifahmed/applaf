@@ -277,7 +277,7 @@ map_classify_time += get_cur_time_us() - ttt;
    truncated. */
 
 void write_to_testcase(void* mem, u32 len) {
-
+  u64 ttt = get_cur_time_us();
   s32 fd = out_fd;
 
 #ifdef _AFL_DOCUMENT_MUTATIONS
@@ -339,13 +339,13 @@ void write_to_testcase(void* mem, u32 len) {
   } else
 
     close(fd);
-
+  write_test_time += get_cur_time_us() - ttt;
 }
 
 /* The same, but with an adjustable gap. Used for trimming. */
 
 void write_with_gap(void* mem, u32 len, u32 skip_at, u32 skip_len) {
-
+  u64 ttt = get_cur_time_us();
   s32 fd = out_fd;
   u32 tail_len = len - skip_at - skip_len;
 
@@ -381,7 +381,7 @@ void write_with_gap(void* mem, u32 len, u32 skip_at, u32 skip_len) {
   } else
 
     close(fd);
-
+  write_test_time += get_cur_time_us() - ttt;
 }
 
 /* Calibrate a new test case. This is done when processing the input directory
