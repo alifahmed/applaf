@@ -106,6 +106,21 @@
 #define CASE_PREFIX "id_"
 #endif                                                    /* ^!SIMPLE_FILES */
 
+//==============================================================================
+//                                    ALIF
+//==============================================================================
+extern u64 total_time;
+extern u64 map_reset_time;
+extern u64 map_classify_time;
+extern u64 map_compare_time;
+extern u64 map_hash_time;
+extern u64 map_simplify_time;
+extern u64 map_copy_time;
+extern u64 exec_time;
+extern u64 score_update_time;
+extern u64 cull_queue_time;
+extern u64 write_test_time;
+
 struct queue_entry {
 
   u8* fname;                            /* File name for the test case      */
@@ -735,6 +750,13 @@ static u64 get_cur_time_us(void) {
 
   return (tv.tv_sec * 1000000ULL) + tv.tv_usec;
 
+}
+
+static inline u32 hash32_time(const void* key, u32 len, u32 seed){
+	u64 ttt = get_cur_time_us();
+	u32 ret = hash32(key, len, seed);
+	map_hash_time += get_cur_time_us() - ttt;
+	return ret;
 }
 
 #ifdef _AFL_DOCUMENT_MUTATIONS

@@ -90,7 +90,7 @@ u8 get_exec_checksum(u8* buf, u32 len, u32* cksum) {
 
   if (unlikely(common_fuzz_stuff(its_argv, buf, len))) return 1;
 
-  *cksum = hash32(trace_bits, map_used, HASH_CONST);
+  *cksum = hash32_time(trace_bits, map_used, HASH_CONST);
   return 0;
 
 }

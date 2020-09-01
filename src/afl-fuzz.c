@@ -883,6 +883,7 @@ int main(int argc, char** argv) {
 
     use_argv = argv + optind;
 
+  u64 ttt = get_cur_time_us();
   perform_dry_run(use_argv);
 
   cull_queue();
@@ -1023,12 +1024,14 @@ int main(int argc, char** argv) {
 
   }
 
-  write_bitmap();
+  //write_bitmap();
   write_stats_file(0, 0, 0);
   maybe_update_plot_file(0, 0);
   save_auto();
 
 stop_fuzzing:
+
+total_time = get_cur_time_us() - ttt;
 
   SAYF(CURSOR_SHOW cLRD "\n\n+++ Testing aborted %s +++\n" cRST,
        stop_soon == 2 ? "programmatically" : "by user");
@@ -1061,6 +1064,48 @@ stop_fuzzing:
 #endif
 
   OKF("We're done here. Have a nice day!\n");
+
+total_time /= 1000;
+map_reset_time /= 1000;
+map_classify_time /= 1000;
+map_compare_time /= 1000;
+map_hash_time /= 1000;
+map_simplify_time /= 1000;
+map_copy_time /= 1000;
+exec_time /= 1000;
+score_update_time /= 1000;
+cull_queue_time /= 1000;
+write_test_time /= 1000;
+
+	SAYF("Total time: %llu ms\n", total_time);
+  SAYF("Execution time: %llu ms\n", exec_time);
+  SAYF("Map classify: %llu ms\n", map_classify_time);
+  SAYF("Map compare: %llu ms\n", map_compare_time);
+  SAYF("Map reset: %llu ms\n", map_reset_time);
+  SAYF("Hash map time: %llu ms\n", map_hash_time);
+  SAYF("Simplify time: %llu ms\n", map_simplify_time);
+  SAYF("Map copy time: %llu ms\n", map_copy_time);
+  SAYF("Score update time: %llu ms\n", score_update_time);
+  SAYF("Cull queue time: %llu ms\n", cull_queue_time);
+  SAYF("Write test time: %llu ms\n", write_test_time);
+  
+  FILE* fp = fopen("time_log.txt", "a");
+  if(fp == NULL){
+      exit(-1);
+  }
+  fprintf(fp, "%u,", MAP_SIZE);
+  fprintf(fp, "%llu,", total_time);
+  fprintf(fp, "%llu,", exec_time);
+  fprintf(fp, "%llu,", map_classify_time);
+  fprintf(fp, "%llu,", map_compare_time);
+  fprintf(fp, "%llu,", map_reset_time);
+  fprintf(fp, "%llu,", map_hash_time);
+  fprintf(fp, "%llu,", map_simplify_time);
+  fprintf(fp, "%llu,", map_copy_time);
+  fprintf(fp, "%llu,", score_update_time);
+  fprintf(fp, "%llu,", cull_queue_time);
+  fprintf(fp, "%llu\n", write_test_time);
+  fclose(fp);
 
   exit(0);
 

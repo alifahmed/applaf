@@ -155,11 +155,13 @@ void setup_shm(unsigned char dumb_mode) {
 #else
   u8 *shm_str;
 
-  shm_id = shmget(IPC_PRIVATE, MAP_SIZE, IPC_CREAT | IPC_EXCL | 0600 | SHM_HUGETLB);
+  //shm_id = shmget(IPC_PRIVATE, MAP_SIZE, IPC_CREAT | IPC_EXCL | 0600 | SHM_HUGETLB);
+  shm_id = shmget(IPC_PRIVATE, MAP_SIZE, IPC_CREAT | IPC_EXCL | 0600);
 
   if (shm_id < 0) PFATAL("shmget() failed");
 
-  shm_idx_id = shmget(IPC_PRIVATE, MAP_SIZE * sizeof(u32), IPC_CREAT | IPC_EXCL | 0600 | SHM_HUGETLB);
+  //shm_idx_id = shmget(IPC_PRIVATE, MAP_SIZE * sizeof(u32), IPC_CREAT | IPC_EXCL | 0600 | SHM_HUGETLB);
+  shm_idx_id = shmget(IPC_PRIVATE, MAP_SIZE * sizeof(u32), IPC_CREAT | IPC_EXCL | 0600);
 
   if (shm_idx_id < 0) PFATAL("shmget() failed");
 

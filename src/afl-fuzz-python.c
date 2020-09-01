@@ -352,7 +352,7 @@ u8 trim_case_python(char** argv, struct queue_entry* q, u8* in_buf) {
 
     }
 
-    cksum = hash32(trace_bits, MAP_SIZE, HASH_CONST);
+    cksum = hash32_time(trace_bits, MAP_SIZE, HASH_CONST);
 
     if (cksum == q->exec_cksum) {
 

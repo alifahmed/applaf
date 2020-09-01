@@ -637,7 +637,7 @@ u8 fuzz_one_original(char** argv) {
 
     if (!dumb_mode && (stage_cur & 7) == 7) {
 
-      u32 cksum = hash32(trace_bits, map_used, HASH_CONST);
+      u32 cksum = hash32_time(trace_bits, map_used, HASH_CONST);
 
       if (stage_cur == stage_max - 1 && cksum == prev_cksum) {
 
@@ -795,7 +795,7 @@ u8 fuzz_one_original(char** argv) {
          without wasting time on checksums. */
 
       if (!dumb_mode && len >= EFF_MIN_LEN)
-        cksum = hash32(trace_bits, map_used, HASH_CONST);
+        cksum = hash32_time(trace_bits, map_used, HASH_CONST);
       else
         cksum = ~queue_cur->exec_cksum;
 
@@ -2655,7 +2655,7 @@ u8 common_fuzzing(char** argv, struct MOpt_globals_t MOpt_globals) {
 
     if (!dumb_mode && (stage_cur & 7) == 7) {
 
-      u32 cksum = hash32(trace_bits, map_used, HASH_CONST);
+      u32 cksum = hash32_time(trace_bits, map_used, HASH_CONST);
 
       if (stage_cur == stage_max - 1 && cksum == prev_cksum) {
 
@@ -2813,7 +2813,7 @@ u8 common_fuzzing(char** argv, struct MOpt_globals_t MOpt_globals) {
          without wasting time on checksums. */
 
       if (!dumb_mode && len >= EFF_MIN_LEN)
-        cksum = hash32(trace_bits, map_used, HASH_CONST);
+        cksum = hash32_time(trace_bits, map_used, HASH_CONST);
       else
         cksum = ~queue_cur->exec_cksum;
 

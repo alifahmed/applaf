@@ -170,7 +170,7 @@ void destroy_queue(void) {
    contender, or if the contender has a more favorable speed x size factor. */
 
 void update_bitmap_score(struct queue_entry* q) {
-
+u64 ttt = get_cur_time_us();
   u32 i;
   u64 fav_factor = q->exec_us * q->len;
   u64 fuzz_p2 = next_p2(q->n_fuzz);
@@ -228,7 +228,7 @@ void update_bitmap_score(struct queue_entry* q) {
       score_changed = 1;
 
     }
-
+score_update_time += get_cur_time_us() - ttt;
 }
 
 /* The second part of the mechanism discussed above is a routine that
@@ -238,7 +238,7 @@ void update_bitmap_score(struct queue_entry* q) {
    all fuzzing steps. */
 
 void cull_queue(void) {
-
+u64 ttt = get_cur_time_us();
   struct queue_entry* q;
   static u8           temp_v[MAP_SIZE >> 3];
   u32                 i;
@@ -293,7 +293,7 @@ void cull_queue(void) {
     q = q->next;
 
   }
-
+cull_queue_time += get_cur_time_us() - ttt;
 }
 
 /* Calculate case desirability score to adjust the length of havoc fuzzing.

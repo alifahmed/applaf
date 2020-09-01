@@ -257,7 +257,7 @@ void show_stats(void) {
     last_stats_ms = cur_ms;
     write_stats_file(t_byte_ratio, stab_ratio, avg_exec);
     save_auto();
-    write_bitmap();
+    //write_bitmap();
 
   }
 

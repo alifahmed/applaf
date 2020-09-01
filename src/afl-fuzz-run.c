@@ -45,14 +45,17 @@ u8 run_target(char** argv, u32 timeout) {
      must prevent any earlier operations from venturing into that
      territory. */
 
+u64 ttt = get_cur_time_us();
   memset(trace_bits, 0, map_used);
   MEM_BARRIER();
+map_reset_time += get_cur_time_us() - ttt;
 
   /* If we're running in "dumb" mode, we can't rely on the fork server
      logic compiled into the target program, so we will just keep calling
      execve(). There is a bit of code duplication between here and
      init_forkserver(), but c'est la vie. */
 
+ttt = get_cur_time_us();
   if (dumb_mode == 1 || no_forkserver) {
 
     child_pid = fork();
@@ -226,14 +229,17 @@ u8 run_target(char** argv, u32 timeout) {
 
   MEM_BARRIER();
 
+exec_time += get_cur_time_us() - ttt;
   tb4 = *(u32*)trace_bits;
   map_used = ((trace_idx[0] + 63) / 64) * 64;	//align to 64
 
+ttt = get_cur_time_us();
 #ifdef WORD_SIZE_64
   classify_counts((u64*)trace_bits);
 #else
   classify_counts((u32*)trace_bits);
 #endif                                                     /* ^WORD_SIZE_64 */
+map_classify_time += get_cur_time_us() - ttt;
 
   prev_timed_out = child_timed_out;
 
@@ -416,7 +422,9 @@ u8 calibrate_case(char** argv, struct queue_entry* q, u8* use_mem, u32 handicap,
   if (dumb_mode != 1 && !no_forkserver && !cmplog_forksrv_pid && cmplog_mode)
     init_cmplog_forkserver(argv);
 
+  u64 ttt = get_cur_time_us();
   if (q->exec_cksum) memcpy(first_trace, trace_bits, map_used);
+  map_copy_time += get_cur_time_us() - ttt;
 
   start_us = get_cur_time_us();
 
@@ -442,13 +450,14 @@ u8 calibrate_case(char** argv, struct queue_entry* q, u8* use_mem, u32 handicap,
 
     }
 
-    cksum = hash32(trace_bits, map_used, HASH_CONST);
+    cksum = hash32_time(trace_bits, map_used, HASH_CONST);
 
     if (q->exec_cksum != cksum) {
 
       u8 hnb = has_new_bits(virgin_bits);
       if (hnb > new_bits) new_bits = hnb;
 
+ttt = get_cur_time_us();
       if (q->exec_cksum) {
 
         u32 i;
@@ -472,7 +481,7 @@ u8 calibrate_case(char** argv, struct queue_entry* q, u8* use_mem, u32 handicap,
         memcpy(first_trace, trace_bits, map_used);
 
       }
-
+map_copy_time += get_cur_time_us() - ttt;
     }
 
   }
@@ -735,7 +744,7 @@ u8 trim_case(char** argv, struct queue_entry* q, u8* in_buf) {
 
       /* Note that we don't keep track of crashes or hangs here; maybe TODO? */
 
-      cksum = hash32(trace_bits, map_used, HASH_CONST);
+      cksum = hash32_time(trace_bits, map_used, HASH_CONST);
 
       /* If the deletion had no impact on the trace, make it permanent. This
          isn't perfect for variable-path inputs, but we're just making a

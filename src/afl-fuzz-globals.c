@@ -25,6 +25,21 @@
 
 #include "afl-fuzz.h"
 
+//==============================================================================
+//                                    ALIF
+//==============================================================================
+u64 total_time = 0;
+u64 map_reset_time = 0;
+u64 map_classify_time = 0;
+u64 map_compare_time = 0;
+u64 map_hash_time = 0;
+u64 map_simplify_time = 0;
+u64 map_copy_time = 0;
+u64 exec_time = 0;
+u64 score_update_time = 0;
+u64 cull_queue_time = 0;
+u64 write_test_time = 0;
+
 /* MOpt:
    Lots of globals, but mostly for the status UI and other things where it
    really makes no sense to haul them around as function parameters. */
