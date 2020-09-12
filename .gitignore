@@ -32,3 +32,7 @@
 *.app
 
 myTest
+
+.cproject
+.project
+.settings/

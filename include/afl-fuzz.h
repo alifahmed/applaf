@@ -141,7 +141,7 @@ struct queue_entry {
 
   u64 exec_us,                          /* Execution time (us)              */
       handicap,                         /* Number of queue cycles behind    */
-      n_fuzz,                          /* Number of fuzz, does not overflow */
+      //n_fuzz,                          /* Number of fuzz, does not overflow */
       depth;                            /* Path depth                       */
 
   u8* trace_mini;                       /* Trace bytes, if kept             */
