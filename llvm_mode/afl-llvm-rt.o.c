@@ -240,7 +240,6 @@ int __afl_persistent_loop(unsigned int max_cnt) {
     if (is_persistent) {
 
       memset(__afl_area_ptr, 0, __afl_idx_ptr[0]);
-      __afl_area_ptr[0] = 1;
       __afl_prev_loc = 0;
 
     }
@@ -257,7 +256,6 @@ int __afl_persistent_loop(unsigned int max_cnt) {
 
       raise(SIGSTOP);
 
-      __afl_area_ptr[0] = 1;
       __afl_prev_loc = 0;
 
       return 1;
