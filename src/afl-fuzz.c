@@ -896,6 +896,8 @@ int main(int argc, char** argv) {
   maybe_update_plot_file(0, 0);
   save_auto();
 
+  stop_soon = 1;
+
   if (stop_soon) goto stop_fuzzing;
 
   /* Woop woop woop */
@@ -1077,7 +1079,7 @@ score_update_time /= 1000;
 cull_queue_time /= 1000;
 write_test_time /= 1000;
 
-	SAYF("Total time: %llu ms\n", total_time);
+  SAYF("Total time: %llu ms\n", total_time);
   SAYF("Execution time: %llu ms\n", exec_time);
   SAYF("Map classify: %llu ms\n", map_classify_time);
   SAYF("Map compare: %llu ms\n", map_compare_time);
@@ -1089,22 +1091,16 @@ write_test_time /= 1000;
   SAYF("Cull queue time: %llu ms\n", cull_queue_time);
   SAYF("Write test time: %llu ms\n", write_test_time);
   
-  FILE* fp = fopen("time_log.txt", "a");
+  MEM_BARRIER();
+
+  char coverageFileName[1024];
+  sprintf(coverageFileName, "%s/../edge_coverage.txt", in_dir);
+
+  FILE* fp = fopen(coverageFileName, "w");
   if(fp == NULL){
       exit(-1);
   }
-  fprintf(fp, "%u,", MAP_SIZE);
-  fprintf(fp, "%llu,", total_time);
-  fprintf(fp, "%llu,", exec_time);
-  fprintf(fp, "%llu,", map_classify_time);
-  fprintf(fp, "%llu,", map_compare_time);
-  fprintf(fp, "%llu,", map_reset_time);
-  fprintf(fp, "%llu,", map_hash_time);
-  fprintf(fp, "%llu,", map_simplify_time);
-  fprintf(fp, "%llu,", map_copy_time);
-  fprintf(fp, "%llu,", score_update_time);
-  fprintf(fp, "%llu,", cull_queue_time);
-  fprintf(fp, "%llu\n", write_test_time);
+  fprintf(fp, "%u\n", trace_idx[0]);
   fclose(fp);
 
   exit(0);
